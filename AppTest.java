@@ -1,4 +1,4 @@
-package com.ibt.app;
+package com.ibt.idris_app;
 
 import static org.junit.Assert.assertTrue;
 
