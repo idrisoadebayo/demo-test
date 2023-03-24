@@ -1,0 +1,23 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Hello') {
+            steps {
+                echo 'Hello World'
+            }
+        }
+        stage('Hi') {
+            steps {
+                echo 'Hi This is my first project'
+            }
+        }
+
+        stage('Git checkout') {
+            steps {
+                echo 'Hi This is my first project so help me God'
+                git branch: 'DeVops', changelog: false, credentialsId: 'for-github', poll: false, url: 'https://github.com/idrisoadebayo/demo-test.git'
+            }
+        }
+    }
+}
