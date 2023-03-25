@@ -1,45 +1,60 @@
 pipeline {
     agent any
     parameters {
-        string(name:'Branch', defaultvalue:'main', description:'enter branch to build')
+        string(name:'Branch', defaultValue:'main', description:'enter branch to build')
     }
     environment{
-        Message="About to be a certify DeVops Engineer"
+        Message="Jan26_Cohort"
     }
     stages {
         stage('Hello') {
             steps {
                 echo 'Hello World'
-                echo "${env.Message}
+                echo "${env.Message}"
             }
         }
-        stage('Hi') {
+         stage('hi') {
             steps {
-                echo 'Hi This is my first project'
-                echo "${env.Message}
+                echo 'Hi'
+                echo "${env.Message}"
             }
         }
         stage('Git checkout') {
             steps {
-                echo 'Hi This is my first project so help me God'
+                echo 'Hi this is my first pipeline job'
                 git branch: 'DeVops', changelog: false, credentialsId: 'for-github', poll: false, url: 'https://github.com/idrisoadebayo/demo-test.git'
             }
         }
-        stage('GItSCM') {
+         stage('GItSCM') {
+            when{
+                 expression {
+                        env.BRANCH_NAME == "main"
+                 }
+                }
                     steps {
-                        echo 'trying gitscm'
-                        echo "${env.Message}
+                        echo 'trying gitscm to hook logs'
+                        echo 'trying gitSCM poll'
+                        echo "${env.variable}"
                     }
                 }
-        stage('Build'){
+          stage('Build'){
+          environment{
+            variable="435"
+          }
             steps{
-                sh "pwd"
-                sh "who"
-                script{
-                  def version = '1.2'
-                  echo "${version}"
+                  sh "pwd"
+                  sh "who"
+                  echo "${env.variable}"
+                  script{
+                    def version = '1.2'
+                    echo "${version}"
                   }
-                }
+            }
+          }
+    }
+     post {
+            always{
+                echo "i will run always"
             }
         }
-    }
+}
