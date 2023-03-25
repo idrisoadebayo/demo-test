@@ -1,45 +1,11 @@
 pipeline {
     agent any
-    parameters {
-        string(name:'Branch', defaultvalue:'main', description:'enter branch to build')
-    }
-    environment{
-        Message="About to be a certify DeVops Engineer"
-    }
+
     stages {
         stage('Hello') {
             steps {
                 echo 'Hello World'
-                echo "${env.Message}
-            }
-        }
-        stage('Hi') {
-            steps {
-                echo 'Hi This is my first project'
-                echo "${env.Message}
-            }
-        }
-        stage('Git checkout') {
-            steps {
-                echo 'Hi This is my first project so help me God'
-                git branch: 'DeVops', changelog: false, credentialsId: 'for-github', poll: false, url: 'https://github.com/idrisoadebayo/demo-test.git'
-            }
-        }
-        stage('GItSCM') {
-                    steps {
-                        echo 'trying gitscm'
-                        echo "${env.Message}
-                    }
-                }
-        stage('Build'){
-            steps{
-                sh "pwd"
-                sh "who"
-                script{
-                  def version = '1.2'
-                  echo "${version}"
-                  }
-                }
             }
         }
     }
+}
