@@ -19,5 +19,20 @@ pipeline {
                 git branch: 'DeVops', changelog: false, credentialsId: 'for-github', poll: false, url: 'https://github.com/idrisoadebayo/demo-test.git'
             }
         }
+        stage('GItSCM') {
+                    steps {
+                        echo 'trying gitscm'
+                    }
+                }
+        stage('Build'){
+            steps{
+                sh "pwd"
+                sh "who"
+                script{
+                  def version = '1.2'
+                  echo "${version}"
+                  }
+                }
+            }
+        }
     }
-}
