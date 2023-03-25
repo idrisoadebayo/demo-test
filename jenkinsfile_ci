@@ -2,10 +2,14 @@ pipeline{
     agent any
 
     stages {
-    stages('hi') {
+    stages('Git checkout') {
                    steps {
-                        echo 'Hi'
+                        checkout changelog: false, poll: false, scm: scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'for-github', url: 'https://github.com/idrisoadebayo/demo-test.git']])
                    }
-         }
+               }
+    stage('value')
+    {
+        sh "mvn validate"
+    }
     }
 }
