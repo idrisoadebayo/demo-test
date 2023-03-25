@@ -19,7 +19,6 @@ pipeline {
                 echo "${env.Message}
             }
         }
-
         stage('Git checkout') {
             steps {
                 echo 'Hi This is my first project so help me God'
