@@ -44,28 +44,9 @@ pipeline{
        stage('Upload to Artifactory')
        {
             steps{
-                withCredentials([file(credentialsId: 'mvn_settings_gunjan', variable: 'settings')]) {
+                withCredentials([file(credentialsId: 'mvn_settings_ci', variable: 'settings_mvn')]) {
                     sh "mvn deploy -s $settings"
                 }
-            }
-       }
-       stage('upload Artifactory - configFile')
-       {
-            steps{
-                configFileProvider([configFile(fileId: '5d0920bc-97c5-4877-8aa4-2f61975fa9fc', targetLocation: 'mvn_settings', variable: 'mvn_settings')]) {
-                   sh "mvn deploy -s $mvn_settings"
-                }
-            }
-       }
-       stage('Vulnerability scan - Dependency Check')
-       {
-            steps{
-                     dependencyCheck additionalArguments: '''
-                                                           -o "./"
-                                                           -s "./"
-                                                           -f "ALL"
-                                                           --prettyPrint ''', odcInstallation: 'dependency-check'
-                       dependencyCheckPublisher pattern: 'dependency-check-report.xml'
             }
        }
     }
