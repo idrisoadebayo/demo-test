@@ -1,0 +1,46 @@
+version: '3.3'
+
+services:
+  influxdb:
+    image: influxdb:2.6.1
+    ports:
+      - '8086:8086'
+    volumes:
+      - influxdb-storage:/var/lib/influxdb
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=admin
+      - DOCKER_INFLUXDB_INIT_PASSWORD=changemeplease
+      - DOCKER_INFLUXDB_INIT_ORG=my-org
+      - DOCKER_INFLUXDB_INIT_BUCKET=my-bucket
+    networks:
+      - backend
+
+  grafana:
+    image: grafana/grafana:7.3.0
+    ports:
+      - '3000:3000'
+    volumes:
+      - grafana-storage:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=changemeplease
+    networks:
+      - backend
+
+  prometheus:
+    image: prom/prometheus:v2.24.0
+    ports:
+      - '9090:9090'
+    volumes:
+      - prometheus-storage:/prometheus
+    networks:
+      - backend
+
+volumes:
+  influxdb-storage:
+  grafana-storage:
+  prometheus-storage:
+
+networks:
+  backend:
