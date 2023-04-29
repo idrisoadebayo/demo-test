@@ -1,0 +1,63 @@
+#!/bin/bash
+set -e
+# Define variables
+STUDENT_NAME="brad"
+VERSION="1.0.${BUILD_NUMBER}"
+DOCKER_IMAGE="${STUDENT_NAME}app:${VERSION}"
+DOCKERFILE="Dockerfile"
+REGISTRY_NAME=devopswithbrad
+
+# PORTS
+HOSTPORT="8338"
+APP_PORT="3000"
+
+docker version
+ls -ltra
+cat ${DOCKERFILE}
+
+echo "=-=--=-=-= CLEANUP STAGE -=-=-=-=--==-"
+docker rm -f $(docker ps -aqf "name=$STUDENT_NAME") 2&>/dev/null
+sleep 4
+docker ps
+
+echo "=-=--=-=-=-=-=-=-=-=-=-=-=-=-=--==-"
+echo "We are going to create a docker image named ${DOCKER_IMAGE}"
+echo "=-=--=-=-=-=-=-=-=-=-=-=-=-=-=--==-"
+
+# Build Docker image
+echo "=-=--=-=-= BUILD STAGE -=-=-=-=--==-"
+docker build -t $DOCKER_IMAGE -f $DOCKERFILE .
+
+docker images --filter "reference=${STUDENT_NAME}*"
+
+# Run Docker container
+echo "=-=--=-=-= RUN STAGE -=-=-=-=--==-"
+docker run -d --name ${STUDENT_NAME} -p ${HOSTPORT}:${APP_PORT} ${DOCKER_IMAGE}
+
+# Wait for container to start
+echo "=-=--=-=-= WAIT STAGE -=-=-=-=--==-"
+sleep 5
+docker ps
+
+# Curl to container
+echo "=-=--=-=-= TEST STAGE -=-=-=-=--==-"
+curl -s http://localhost:${HOSTPORT}
+
+# Stop and remove container
+echo ""
+echo "=-=--=-=-= CLEANUP STAGE -=-=-=-=--==-"
+docker rm -f $(docker ps -aqf "name=$STUDENT_NAME") 2&>/dev/null
+sleep 4
+docker ps
+
+echo "=-=--=-=-= Release STAGE -=-=-=-=--==-"
+# Tag Docker image with repository URL
+docker tag ${DOCKER_IMAGE} ${REGISTRY_NAME}/${DOCKER_IMAGE}
+docker tag ${DOCKER_IMAGE} ${REGISTRY_NAME}/bradapp:latest
+docker tag ${DOCKER_IMAGE} ${REGISTRY_NAME}/bradapp:stable
+
+docker login -u ${REGISTRY_NAME} -p ${DOCKER_HUB_API_KEY}
+# Push Docker image to repository
+docker push ${REGISTRY_NAME}/${DOCKER_IMAGE}
+docker push ${REGISTRY_NAME}/bradapp:latest
+docker push ${REGISTRY_NAME}/bradapp:stable
