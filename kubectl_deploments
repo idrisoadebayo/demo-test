@@ -1,20 +1,24 @@
+#deployment
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: mydeployment
+  name: idrisdeployment
   namespace: ilyas
   labels:
-    app: idriswebapp
+    app: mywebapp
 spec:
-  replicas: 3
+  replicas: 10
   selector:
     matchLabels:
-      app: idriswebapp
+      app:
+      tier: frontend
+#pod tempalte
   template:
     metadata:
       labels:
-        app: idriswebapp
-    spec:
+        app:
+        tier: frontend
+    spec: # Pod spec
       containers:
       - name: mynginxcontainer
         image: nginx:latest
